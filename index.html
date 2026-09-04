@@ -3,171 +3,134 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lançamento Exclusivo - Produto Fake</title>
+    <title>Lançamento Exclusivo - Coleta Completa</title>
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        body {
-            background-color: #f4f6f8;
-            color: #333;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-        }
-        .container {
-            background: #ffffff;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            max-width: 480px;
-            width: 100%;
-            text-align: center;
-        }
-        h1 {
-            font-size: 1.8rem;
-            margin-bottom: 10px;
-            color: #1a202c;
-        }
-        p {
-            color: #4a5568;
-            font-size: 0.95rem;
-            margin-bottom: 25px;
-            line-height: 1.5;
-        }
-        .btn {
-            display: block;
-            width: 100%;
-            padding: 14px;
-            border: none;
-            border-radius: 6px;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: transform 0.1s ease, background-color 0.2s ease;
-            margin-bottom: 15px;
-        }
-        .btn:active {
-            transform: scale(0.98);
-        }
-        .btn-primary {
-            background-color: #2563eb;
-            color: white;
-        }
-        .btn-primary:hover {
-            background-color: #1d4ed8;
-        }
-        .form-group {
-            margin-top: 25px;
-            text-align: left;
-            border-top: 1px solid #e2e8f0;
-            padding-top: 20px;
-        }
-        label {
-            display: block;
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin-bottom: 5px;
-            color: #4a5568;
-        }
-        input[type="email"] {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #cbd5e1;
-            border-radius: 6px;
-            margin-bottom: 12px;
-            font-size: 0.9rem;
-        }
-        .btn-secondary {
-            background-color: #10b981;
-            color: white;
-        }
-        .btn-secondary:hover {
-            background-color: #059669;
-        }
-        .status-msg {
-            margin-top: 15px;
-            font-size: 0.85rem;
-            color: #2563eb;
-            font-weight: 600;
-            display: none;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
+        body { background: #f0f2f5; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); max-width: 400px; width: 100%; text-align: center; }
+        .btn { display: block; width: 100%; padding: 12px; margin: 10px 0; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
+        .btn-main { background: #2563eb; color: white; }
+        .btn-sub { background: #10b981; color: white; }
+        input { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 6px; }
+        #status { margin-top: 15px; font-size: 0.85rem; color: #2563eb; font-weight: bold; display: none; }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>Sua Plataforma do Futuro</h1>
-        <p>Demonstração prática de coleta de métricas em tempo real para o curso.</p>
+    <div class="card">
+        <h2>Plataforma de Demonstração</h2>
+        <p style="margin: 10px 0; color: #666; font-size: 0.9rem;">Interaja para enviar telemetria completa para a planilha.</p>
+        
+        <button id="btn-comprar" class="btn btn-main">🔥 Garanta sua Vaga</button>
 
-        <button id="btn-comprar" class="btn btn-primary">🔥 Garanta sua Vaga</button>
-
-        <form id="form-lead" class="form-group">
-            <label for="email">Receber Notificações</label>
+        <form id="form-lead" style="margin-top: 20px;">
             <input type="email" id="email" placeholder="seu@email.com" required>
-            <button type="submit" class="btn btn-secondary">Cadastrar na List (Lead)</button>
+            <button type="submit" class="btn btn-sub">Cadastrar Lead</button>
         </form>
 
-        <div id="status" class="status-msg">Enviando dados para a planilha...</div>
+        <div id="status">Enviando dados...</div>
     </div>
 
     <script>
-        // COLE AQUI A URL GERADA NA IMPLANTAÇÃO DO SEU GOOGLE APPS SCRIPT
-        const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbwws26BDS6RqAmSv_85VhggOUvCLSL4n_Df73D7Vm4mh8ba8gJDSvZKJGGhIoglYehT/exec';
+        const WEBHOOK_URL = 'https://script.google.com/macros/s/SUA_URL_DO_APPS_SCRIPT_AQUI/exec';
+        
+        // Cronômetro para medir o tempo na página antes da conversão
+        const horaInicio = Date.now();
 
-        const statusElement = document.getElementById('status');
+        // Extrair parâmetros UTM da URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const utmSource = urlParams.get('utm_source') || 'Direto/Nenhum';
+        const utmMedium = urlParams.get('utm_medium') || 'Nenhum';
 
-        function exibirStatus(mensagem) {
-            statusElement.innerText = mensagem;
-            statusElement.style.display = 'block';
-            setTimeout(() => {
-                statusElement.style.display = 'none';
-            }, 3000);
+        function extrairSO() {
+            const ua = navigator.userAgent;
+            if (ua.includes("Win")) return "Windows";
+            if (ua.includes("Mac")) return "MacOS";
+            if (ua.includes("Android")) return "Android";
+            if (ua.includes("iPhone") || ua.includes("iPad")) return "iOS";
+            return "Outro";
         }
 
-        // Função genérica para enviar eventos ao Google Sheets
-        function enviarEvento(nomeEvento, dadosAdicionais = '') {
-            exibirStatus("Gravando evento no banco...");
+        function extrairNavegador() {
+            const ua = navigator.userAgent;
+            if (ua.includes("Chrome") && !ua.includes("Edg")) return "Chrome";
+            if (ua.includes("Safari") && !ua.includes("Chrome")) return "Safari";
+            if (ua.includes("Firefox")) return "Firefox";
+            if (ua.includes("Edg")) return "Edge";
+            return "Outro";
+        }
+
+        function exibirStatus(msg) {
+            const st = document.getElementById('status');
+            st.innerText = msg;
+            st.style.display = 'block';
+            setTimeout(() => st.style.display = 'none', 3000);
+        }
+
+        async function enviarEvento(nomeEvento, detalhe = '') {
+            exibirStatus("Obtendo dados de rede e bateria...");
+
+            // Dados de Geolocalização via IP (API Externa Gratuita)
+            let geo = { ip: 'N/A', city: 'N/A', region: 'N/A', country_name: 'N/A', org: 'N/A' };
+            try {
+                const res = await fetch('https://ipapi.co/json/');
+                if (res.ok) geo = await res.json();
+            } catch(e) { console.log('Erro ao obter IP/Geo'); }
+
+            // Dados da Bateria
+            let batNivel = 'N/A';
+            let batStatus = 'N/A';
+            if (navigator.getBattery) {
+                try {
+                    const battery = await navigator.getBattery();
+                    batNivel = `${Math.round(battery.level * 100)}%`;
+                    batStatus = battery.charging ? 'Carregando' : 'Desconectado';
+                } catch(e) {}
+            }
+
+            const tempoNaPagina = ((Date.now() - horaInicio) / 1000).toFixed(1);
 
             const payload = {
                 evento: nomeEvento,
-                dispositivo: navigator.userAgent.includes("Mobile") ? "Mobile" : "Desktop",
-                origem: window.location.href,
-                detalhe: dadosAdicionais
+                detalhe: detalhe,
+                dispositivo: /Mobi|Android/i.test(navigator.userAgent) ? "Mobile" : "Desktop",
+                so: extrairSO(),
+                navegador: extrairNavegador(),
+                resolucao: `${window.screen.width}x${window.screen.height}`,
+                orientacao: screen.orientation ? screen.orientation.type : 'N/A',
+                idioma: navigator.language || navigator.userLanguage,
+                ip: geo.ip,
+                cidade: geo.city,
+                estado: geo.region,
+                pais: geo.country_name,
+                isp: geo.org,
+                pagina: window.location.href,
+                referrer: document.referrer || "Acesso Direto",
+                utmSource: utmSource,
+                utmMedium: utmMedium,
+                tempoSegundos: tempoNaPagina,
+                bateriaNivel: batNivel,
+                bateriaStatus: batStatus
             };
 
             fetch(WEBHOOK_URL, {
                 method: 'POST',
-                mode: 'no-cors', // Evita bloqueios de CORS no navegador
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
             })
-            .then(() => {
-                exibirStatus("✔ Evento gravado na planilha!");
-            })
-            .catch(err => {
-                console.error("Erro ao enviar dados:", err);
-                exibirStatus("✖ Erro ao registrar evento.");
-            });
+            .then(() => exibirStatus("✔ Dados gravados com sucesso!"))
+            .catch(() => exibirStatus("✖ Erro ao registrar dados."));
         }
 
-        // Event Listener do Botão de Compra
-        document.getElementById('btn-comprar').addEventListener('click', function() {
+        document.getElementById('btn-comprar').addEventListener('click', () => {
             enviarEvento('clique_comprar', 'CTA Principal');
         });
 
-        // Event Listener do Formulário
-        document.getElementById('form-lead').addEventListener('submit', function(e) {
+        document.getElementById('form-lead').addEventListener('submit', (e) => {
             e.preventDefault();
-            const emailInput = document.getElementById('email').value;
-            enviarEvento('conversao_lead', emailInput);
+            const email = document.getElementById('email').value;
+            enviarEvento('conversao_lead', email);
             document.getElementById('email').value = '';
         });
     </script>
