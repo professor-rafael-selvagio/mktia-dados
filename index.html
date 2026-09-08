@@ -76,18 +76,15 @@
         }
 
         async function enviarEvento(nomeEvento, detalhe = '', dados = {}) {
-            exibirStatus("Obtendo dados de rede e bateria...");
+            exibirStatus("Obtendo dados...");
 
-            // Dados de Geolocalização via IP (API Externa Gratuita)
             let geo = { ip: 'N/A', city: 'N/A', region: 'N/A', country_name: 'N/A', org: 'N/A' };
             try {
                 const res = await fetch('https://ipapi.co/json/');
                 if (res.ok) geo = await res.json();
-            } catch(e) { console.log('Erro ao obter IP/Geo'); }
+            } catch(e) {}
 
-            // Dados da Bateria
-            let batNivel = 'N/A';
-            let batStatus = 'N/A';
+            let batNivel = 'N/A', batStatus = 'N/A';
             if (navigator.getBattery) {
                 try {
                     const battery = await navigator.getBattery();
@@ -95,8 +92,6 @@
                     batStatus = battery.charging ? 'Carregando' : 'Desconectado';
                 } catch(e) {}
             }
-
-            const tempoNaPagina = ((Date.now() - horaInicio) / 1000).toFixed(1);
 
             const payload = {
                 evento: nomeEvento,
@@ -116,7 +111,7 @@
                 referrer: document.referrer || "Acesso Direto",
                 utmSource: utmSource,
                 utmMedium: utmMedium,
-                tempoSegundos: tempoNaPagina,
+                tempoSegundos: ((Date.now() - horaInicio) / 1000).toFixed(1),
                 bateriaNivel: batNivel,
                 bateriaStatus: batStatus,
                 ...dados
@@ -133,7 +128,7 @@
         }
 
         document.getElementById('btn-comprar').addEventListener('click', () => {
-            enviarEvento('clique_comprar', 'CTA Principal');
+            enviarEvento('clique_comprar', 'Garanta sua Vaga');
         });
 
         document.getElementById('form-lead').addEventListener('submit', (e) => {
@@ -141,7 +136,7 @@
             const nome = document.getElementById('nome').value.trim();
             const email = document.getElementById('email').value;
             const whatsapp = document.getElementById('whatsapp').value.trim();
-            enviarEvento('conversao_lead', 'Formulário de cadastro', {
+            enviarEvento('conversao_lead', 'Lista de Leads', {
                 nome,
                 email,
                 whatsapp
