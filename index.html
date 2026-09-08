@@ -3,45 +3,176 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lançamento Exclusivo - Coleta Completa</title>
+    <title>Lançamento Exclusivo - Marketing Digital & IA</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
-        body { background: #f0f2f5; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
-        .card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); max-width: 400px; width: 100%; text-align: center; }
-        .btn { display: block; width: 100%; padding: 12px; margin: 10px 0; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
-        .btn-main { background: #2563eb; color: white; }
-        .btn-sub { background: #10b981; color: white; }
-        input { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 6px; }
-        #status { margin-top: 15px; font-size: 0.85rem; color: #2563eb; font-weight: bold; display: none; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: #f8fafc; color: #1e293b; line-height: 1.6; }
+
+        /* Container e Layout Principal */
+        .wrapper { max-width: 900px; margin: 0 auto; padding: 20px; }
+        header { text-align: center; padding: 40px 20px 20px; }
+        h1 { font-size: 2.2rem; color: #0f172a; margin-bottom: 12px; }
+        .subtitle { font-size: 1.1rem; color: #475569; max-width: 650px; margin: 0 auto 24px; }
+
+        /* Botão Principal do Hero */
+        .hero-action { text-align: center; margin-bottom: 40px; }
+        .btn { display: inline-block; padding: 14px 28px; border: none; border-radius: 8px; font-weight: bold; font-size: 1rem; cursor: pointer; transition: all 0.2s ease; }
+        .btn-main { background: #2563eb; color: white; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3); }
+        .btn-main:hover { background: #1d4ed8; transform: translateY(-2px); }
+        .btn-sub { background: #10b981; color: white; width: 100%; margin-top: 10px; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); }
+        .btn-sub:hover { background: #059669; }
+
+        /* Seção de Conteúdo e Benefícios */
+        .section-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin: 40px 0; }
+        .card-feature { background: white; padding: 24px; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+        .card-feature h3 { font-size: 1.2rem; color: #2563eb; margin-bottom: 8px; }
+
+        /* Banner Promocional */
+        .banner { background: linear-gradient(135deg, #1e293b, #0f172a); color: white; padding: 30px; border-radius: 16px; margin: 40px 0; text-align: center; }
+        .banner h2 { margin-bottom: 10px; font-size: 1.6rem; }
+        .banner p { color: #94a3b8; font-size: 0.95rem; }
+
+        /* Form Card */
+        .form-card { background: white; padding: 32px; border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 10px 25px rgba(0,0,0,0.08); max-width: 480px; margin: 40px auto; }
+        .form-card h2 { text-align: center; font-size: 1.5rem; margin-bottom: 8px; color: #0f172a; }
+        .form-card p { text-align: center; color: #64748b; font-size: 0.9rem; margin-bottom: 24px; }
+
+        .form-group { margin-bottom: 16px; text-align: left; }
+        label { display: block; font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 6px; }
+        input { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.95rem; outline: none; transition: border-color 0.2s; }
+        input:focus { border-color: #2563eb; }
+
+        /* Toast / Feedback Status */
+        #status { position: fixed; bottom: 20px; right: 20px; background: #0f172a; color: white; padding: 12px 20px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; box-shadow: 0 4px 12px rgba(0,0,0,0.2); display: none; z-index: 1000; }
+
+        footer { text-align: center; padding: 40px 0 20px; color: #94a3b8; font-size: 0.8rem; }
+
+        /* Banner de Consentimento (LGPD) */
+        #consent-banner {
+            position: fixed;
+            left: 0; right: 0; bottom: 0;
+            background: #0f172a;
+            color: #e2e8f0;
+            padding: 20px;
+            box-shadow: 0 -6px 20px rgba(0,0,0,0.25);
+            z-index: 2000;
+            display: none;
+        }
+        #consent-banner.show { display: block; }
+        .consent-inner {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+        .consent-text { flex: 1 1 420px; font-size: 0.88rem; color: #cbd5e1; }
+        .consent-text strong { color: #fff; }
+        .consent-text a { color: #60a5fa; text-decoration: underline; }
+        .consent-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+        .btn-consent {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .btn-aceitar { background: #10b981; color: white; }
+        .btn-aceitar:hover { background: #059669; }
+        .btn-recusar { background: transparent; color: #cbd5e1; border: 1px solid #475569; }
+        .btn-recusar:hover { background: #1e293b; }
     </style>
 </head>
 <body>
 
-    <div class="card">
-        <h2>Plataforma de Demonstração</h2>
-        <p style="margin: 10px 0; color: #666; font-size: 0.9rem;">Deixe seus dados para receber mais informações.</p>
-        
-        <button id="btn-comprar" class="btn btn-main">🔥 Garanta sua Vaga</button>
+    <div class="wrapper">
+        <!-- Hero Section -->
+        <header>
+            <h1>Acelere Suas Vendas com IA & Automação</h1>
+            <p class="subtitle">Aprenda as estratégias mais avançadas de captura de dados, mensuração de tráfego e análise preditiva para multiplicar seus resultados.</p>
+            <div class="hero-action">
+                <button id="btn-comprar" class="btn btn-main">🔥 Garanta sua Vaga</button>
+            </div>
+        </header>
 
-        <form id="form-lead" style="margin-top: 20px;">
-            <label for="nome">Nome</label>
-            <input type="text" id="nome" name="nome" placeholder="Seu nome" autocomplete="name" required>
+        <!-- Seção de Conteúdo/Diferenciais -->
+        <div class="section-grid">
+            <div class="card-feature">
+                <h3>⚡ Coleta em Tempo Real</h3>
+                <p>Monitore acessos, geolocalização e métricas técnicas sem perder nenhum dado do seu visitante.</p>
+            </div>
+            <div class="card-feature">
+                <h3>📊 Rastreamento UTM</h3>
+                <p>Saiba exatamente de qual canal, anúncio ou rede social vieram seus melhores leads e conversões.</p>
+            </div>
+            <div class="card-feature">
+                <h3>🤖 Inteligência Artificial</h3>
+                <p>Utilize scripts automatizados em Python e Apps Script para integrar seus dados direto no Google Sheets.</p>
+            </div>
+        </div>
 
-            <label for="email">Melhor e-mail</label>
-            <input type="email" id="email" name="email" placeholder="seu@email.com" autocomplete="email" required>
+        <!-- Banner de Chamada Secundária -->
+        <div class="banner">
+            <h2>Vagas Limitadas para a Próxima Turma</h2>
+            <p>Garanta seu acesso exclusivo antes que o lote encerrar. Preencha o formulário abaixo.</p>
+        </div>
 
-            <label for="whatsapp">WhatsApp</label>
-            <input type="tel" id="whatsapp" name="whatsapp" placeholder="(11) 99999-9999" autocomplete="tel" inputmode="tel" required>
+        <!-- Formulário de Cadastro (Alvo da Rolagem) -->
+        <div class="form-card" id="secao-formulario">
+            <h2>Preencha Seus Dados</h2>
+            <p>Insira suas informações abaixo para liberar o acesso à plataforma.</p>
 
-            <button type="submit" class="btn btn-sub">Cadastrar Lead</button>
-        </form>
+            <form id="form-lead">
+                <div class="form-group">
+                    <label for="nome">Nome Completo</label>
+                    <input type="text" id="nome" name="nome" placeholder="Seu nome" autocomplete="name" required>
+                </div>
 
-        <div id="status">Enviando dados...</div>
+                <div class="form-group">
+                    <label for="email">Melhor E-mail</label>
+                    <input type="email" id="email" name="email" placeholder="seu@email.com" autocomplete="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="whatsapp">WhatsApp / Telefone</label>
+                    <input type="tel" id="whatsapp" name="whatsapp" placeholder="(16) 99999-9999" autocomplete="tel" inputmode="tel" required>
+                </div>
+
+                <button type="submit" class="btn btn-sub">Cadastrar Lead</button>
+            </form>
+        </div>
+
+        <footer>
+            <p>© 2026 Plataforma de Demonstração - Todos os direitos reservados.</p>
+        </footer>
+    </div>
+
+    <!-- Feedback Visual -->
+    <div id="status">Enviando dados...</div>
+
+    <!-- Banner de Consentimento (LGPD) -->
+    <div id="consent-banner">
+        <div class="consent-inner">
+            <p class="consent-text">
+                🍪 <strong>Usamos dados de navegação para melhorar sua experiência.</strong>
+                Coletamos informações como localização aproximada (IP), dispositivo, navegador e origem do acesso (UTM) para fins de análise e marketing, conforme a
+                <a href="#" id="link-privacidade">Política de Privacidade</a>.
+                Você pode aceitar ou recusar essa coleta a qualquer momento.
+            </p>
+            <div class="consent-actions">
+                <button id="btn-recusar" class="btn-consent btn-recusar">Recusar</button>
+                <button id="btn-aceitar" class="btn-consent btn-aceitar">Aceitar</button>
+            </div>
+        </div>
     </div>
 
     <script>
         const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbwws26BDS6RqAmSv_85VhggOUvCLSL4n_Df73D7Vm4mh8ba8gJDSvZKJGGhIoglYehT/exec';
-        
+
         // Cronômetro para medir o tempo na página antes da conversão
         const horaInicio = Date.now();
 
@@ -49,6 +180,49 @@
         const urlParams = new URLSearchParams(window.location.search);
         const utmSource = urlParams.get('utm_source') || 'Direto/Nenhum';
         const utmMedium = urlParams.get('utm_medium') || 'Nenhum';
+
+        /* ==================== CONSENTIMENTO (LGPD) ==================== */
+        // Guarda a escolha em cookie (não usa localStorage/sessionStorage).
+        function setCookie(nome, valor, dias) {
+            const data = new Date();
+            data.setTime(data.getTime() + (dias * 24 * 60 * 60 * 1000));
+            document.cookie = `${nome}=${valor};expires=${data.toUTCString()};path=/;SameSite=Lax`;
+        }
+
+        function getCookie(nome) {
+            const match = document.cookie.match(new RegExp('(^| )' + nome + '=([^;]+)'));
+            return match ? match[2] : null;
+        }
+
+        let consentimento = getCookie('consentimento_dados'); // 'aceito' | 'recusado' | null
+
+        function mostrarBannerConsentimento() {
+            document.getElementById('consent-banner').classList.add('show');
+        }
+
+        function esconderBannerConsentimento() {
+            document.getElementById('consent-banner').classList.remove('show');
+        }
+
+        document.getElementById('btn-aceitar').addEventListener('click', () => {
+            consentimento = 'aceito';
+            setCookie('consentimento_dados', 'aceito', 180);
+            esconderBannerConsentimento();
+            enviarEvento('visita_pagina', 'Entrada na página (pós-consentimento)');
+        });
+
+        document.getElementById('btn-recusar').addEventListener('click', () => {
+            consentimento = 'recusado';
+            setCookie('consentimento_dados', 'recusado', 180);
+            esconderBannerConsentimento();
+            exibirStatus('Preferência salva. Coleta de dados desativada.');
+        });
+
+        document.getElementById('link-privacidade').addEventListener('click', (e) => {
+            e.preventDefault();
+            alert('Aqui você pode linkar sua página real de Política de Privacidade, explicando quais dados são coletados, por quê, por quanto tempo são guardados e como o usuário pode solicitar exclusão (direitos garantidos pela LGPD).');
+        });
+        /* ================================================================ */
 
         function extrairSO() {
             const ua = navigator.userAgent;
@@ -72,10 +246,16 @@
             const st = document.getElementById('status');
             st.innerText = msg;
             st.style.display = 'block';
-            setTimeout(() => st.style.display = 'none', 3000);
+            setTimeout(() => st.style.display = 'none', 3500);
         }
 
         async function enviarEvento(nomeEvento, detalhe = '', dados = {}) {
+            // Bloqueia qualquer coleta/envio se o usuário ainda não decidiu ou recusou.
+            if (consentimento !== 'aceito') {
+                exibirStatus('Aguardando consentimento para coletar dados.');
+                return;
+            }
+
             exibirStatus("Obtendo dados...");
 
             let geo = { ip: 'N/A', city: 'N/A', region: 'N/A', country_name: 'N/A', org: 'N/A' };
@@ -84,13 +264,16 @@
                 if (res.ok) geo = await res.json();
             } catch(e) {}
 
-            let batNivel = 'N/A', batStatus = 'N/A';
+            let batNivel = 'Indisponível (iOS/Privacy)', batStatus = 'Indisponível (iOS/Privacy)';
             if (navigator.getBattery) {
                 try {
                     const battery = await navigator.getBattery();
                     batNivel = `${Math.round(battery.level * 100)}%`;
                     batStatus = battery.charging ? 'Carregando' : 'Desconectado';
-                } catch(e) {}
+                } catch(e) {
+                    batNivel = 'Bloqueado';
+                    batStatus = 'Bloqueado';
+                }
             }
 
             const payload = {
@@ -127,25 +310,49 @@
             .catch(() => exibirStatus("✖ Erro ao registrar dados."));
         }
 
+        // Clique no botão superior: Registra o evento e rola até o formulário
         document.getElementById('btn-comprar').addEventListener('click', () => {
             enviarEvento('clique_comprar', 'Garanta sua Vaga');
+
+            const formSection = document.getElementById('secao-formulario');
+            formSection.scrollIntoView({ behavior: 'smooth' });
+
+            setTimeout(() => {
+                document.getElementById('nome').focus();
+            }, 600);
         });
 
+        // Envio do formulário
         document.getElementById('form-lead').addEventListener('submit', (e) => {
             e.preventDefault();
+
+            if (consentimento !== 'aceito') {
+                exibirStatus('É necessário aceitar a coleta de dados para enviar o formulário.');
+                mostrarBannerConsentimento();
+                return;
+            }
+
             const nome = document.getElementById('nome').value.trim();
             const email = document.getElementById('email').value;
             const whatsapp = document.getElementById('whatsapp').value.trim();
+
             enviarEvento('conversao_lead', 'Lista de Leads', {
                 nome,
                 email,
                 whatsapp
             });
+
             e.target.reset();
         });
 
-        // Registra automaticamente a visita assim que a página é aberta.
-        enviarEvento('visita_pagina', 'Entrada na página');
+        // Ao carregar a página: só rastreia automaticamente se já houver consentimento salvo.
+        // Caso contrário, exibe o banner e aguarda a decisão do visitante.
+        if (consentimento === 'aceito') {
+            enviarEvento('visita_pagina', 'Entrada na página');
+        } else if (consentimento === null) {
+            mostrarBannerConsentimento();
+        }
+        // Se consentimento === 'recusado', não faz nada automaticamente.
     </script>
 </body>
 </html>
