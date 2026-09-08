@@ -85,6 +85,17 @@
         .btn-aceitar:hover { background: #059669; }
         .btn-recusar { background: transparent; color: #cbd5e1; border: 1px solid #475569; }
         .btn-recusar:hover { background: #1e293b; }
+
+        /* Bloco de Agradecimento */
+        .agradecimento { text-align: center; padding: 12px 0; animation: apareceSuave 0.4s ease; }
+        .agradecimento-icone { font-size: 2.8rem; margin-bottom: 12px; }
+        .agradecimento h2 { color: #0f172a; margin-bottom: 10px; }
+        .agradecimento p { color: #334155; font-size: 0.95rem; margin-bottom: 4px; }
+        .agradecimento-sub { color: #64748b; font-size: 0.85rem; margin-top: 8px; }
+        @keyframes apareceSuave {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body>
@@ -123,27 +134,36 @@
 
         <!-- Formulário de Cadastro (Alvo da Rolagem) -->
         <div class="form-card" id="secao-formulario">
-            <h2>Preencha Seus Dados</h2>
-            <p>Insira suas informações abaixo para liberar o acesso à plataforma.</p>
+            <div id="form-etapa">
+                <h2>Preencha Seus Dados</h2>
+                <p>Insira suas informações abaixo para liberar o acesso à plataforma.</p>
 
-            <form id="form-lead">
-                <div class="form-group">
-                    <label for="nome">Nome Completo</label>
-                    <input type="text" id="nome" name="nome" placeholder="Seu nome" autocomplete="name" required>
-                </div>
+                <form id="form-lead">
+                    <div class="form-group">
+                        <label for="nome">Nome Completo</label>
+                        <input type="text" id="nome" name="nome" placeholder="Seu nome" autocomplete="name" required>
+                    </div>
 
-                <div class="form-group">
-                    <label for="email">Melhor E-mail</label>
-                    <input type="email" id="email" name="email" placeholder="seu@email.com" autocomplete="email" required>
-                </div>
+                    <div class="form-group">
+                        <label for="email">Melhor E-mail</label>
+                        <input type="email" id="email" name="email" placeholder="seu@email.com" autocomplete="email" required>
+                    </div>
 
-                <div class="form-group">
-                    <label for="whatsapp">WhatsApp / Telefone</label>
-                    <input type="tel" id="whatsapp" name="whatsapp" placeholder="(16) 99999-9999" autocomplete="tel" inputmode="tel" required>
-                </div>
+                    <div class="form-group">
+                        <label for="whatsapp">WhatsApp / Telefone</label>
+                        <input type="tel" id="whatsapp" name="whatsapp" placeholder="(16) 99999-9999" autocomplete="tel" inputmode="tel" required>
+                    </div>
 
-                <button type="submit" class="btn btn-sub">Cadastrar Lead</button>
-            </form>
+                    <button type="submit" class="btn btn-sub">Cadastrar Lead</button>
+                </form>
+            </div>
+
+            <div id="agradecimento-etapa" class="agradecimento" style="display: none;">
+                <div class="agradecimento-icone">✅</div>
+                <h2>Cadastro recebido!</h2>
+                <p id="agradecimento-nome"></p>
+                <p class="agradecimento-sub">Em breve entraremos em contato pelo e-mail ou WhatsApp informado. Fique de olho na sua caixa de entrada (e também no spam, só por garantia 😉).</p>
+            </div>
         </div>
 
         <footer>
@@ -256,7 +276,7 @@
                 return;
             }
 
-            exibirStatus("Obtendo dados...");
+            exibirStatus("...");
 
             let geo = { ip: 'N/A', city: 'N/A', region: 'N/A', country_name: 'N/A', org: 'N/A' };
             try {
@@ -306,8 +326,8 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
             })
-            .then(() => exibirStatus("✔ Dados gravados com sucesso!"))
-            .catch(() => exibirStatus("✖ Erro ao registrar dados."));
+            .then(() => exibirStatus("✔"))
+            .catch(() => exibirStatus("✖"));
         }
 
         // Clique no botão superior: Registra o evento e rola até o formulário
@@ -343,6 +363,17 @@
             });
 
             e.target.reset();
+
+            // Troca o formulário pela tela de agradecimento
+            const primeiroNome = nome.split(' ')[0] || '';
+            document.getElementById('agradecimento-nome').innerText = primeiroNome
+                ? `Obrigado, ${primeiroNome}!`
+                : 'Obrigado pelo cadastro!';
+            document.getElementById('form-etapa').style.display = 'none';
+            document.getElementById('agradecimento-etapa').style.display = 'block';
+
+            // Rola até o card para garantir que a confirmação fique visível
+            document.getElementById('secao-formulario').scrollIntoView({ behavior: 'smooth', block: 'center' });
         });
 
         // Ao carregar a página: só rastreia automaticamente se já houver consentimento salvo.
